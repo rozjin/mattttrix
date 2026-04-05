@@ -68,7 +68,7 @@ class DiscordBot:
         except Exception as e:
             print(f"Failed to sync commands: {e}")
 
-    async def register_command(self, interaction: discord.Interaction, email: str, username: str = None):
+    async def register_command(self, interaction: discord.Interaction, email: str, name: str = None):
         """Handles the /register command to create a new LLDAP user with appropriate group assignment."""
         await interaction.response.defer(ephemeral=True)
 
@@ -88,7 +88,7 @@ class DiscordBot:
         normalized_email = email.lower()
         user_id = str(interaction.user.id)
         # Use provided username if given, otherwise default to Discord username
-        chosen_username = username if username else interaction.user.name
+        chosen_username = name if name else interaction.user.name
 
         # Validate username (alphanumeric and max 20 characters)
         if not chosen_username or not chosen_username.isalnum() or len(chosen_username) > 20:
@@ -139,9 +139,9 @@ class DiscordBot:
         @self.tree.command(name="register", description="Register a new LLDAP account based on your Discord roles")
         @app_commands.describe(
             email="Your email address",
-            username="🔧 Choose your LLDAP username (optional, defaults to Discord username, max 30 chars, alphanumeric)"
+            name="🔧 Choose your LLDAP username (optional, defaults to Discord username, max 30 chars, alphanumeric)"
         )
-        async def register(interaction: discord.Interaction, email: str, username: str = None):
-            await self.register_command(interaction, email, username)
+        async def register(interaction: discord.Interaction, email: str, name: str = None):
+            await self.register_command(interaction, email, name)
 
         print("Setup bot commands")
